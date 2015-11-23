@@ -35,6 +35,7 @@ void BedWriter::write(SvBuilder const& sv) {
         Alignment const& y = **i;
         if(!y.has_sequence() || y.bdflag() != sv.flag)
             continue;
+        char const* aln_chr = _bam_header->target_name[y.tid()];
         int aln_end = y.pos() + y.query_length();
         string color = y.ori() == FWD ? "0,0,255" : "255,0,0";
 
@@ -42,7 +43,7 @@ void BedWriter::write(SvBuilder const& sv) {
             _stream << "chr";
 
         std::string const& lib_name = _lib_info._cfg.library_config(y.lib_index()).name;
-        _stream << seq_name
+        _stream << aln_chr
             << "\t" << y.pos()
             << "\t" << aln_end
             << "\t" << y.query_name() << "|" << lib_name
